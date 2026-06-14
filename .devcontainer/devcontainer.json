@@ -1,0 +1,27 @@
+{
+    "name": "Astro Home Services Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:18-bullseye",
+    "features": {
+        "ghcr.io/devcontainers/features/git": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "anthropic.claude-code",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint"
+            ],
+            "settings": {
+                "files.eol": "\n",
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode"
+            }
+        }
+    },
+    "postCreateCommand": "npm install",
+    "forwardPorts": [
+        4173
+    ],
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+}
