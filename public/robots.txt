@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://PAKEISTI-domenas.lt/sitemap-index.xml

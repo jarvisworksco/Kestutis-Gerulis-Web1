@@ -1,0 +1,73 @@
+---
+interface Props {
+  nuotraukos: { src: string; alt: string; plati?: boolean }[];
+}
+const { nuotraukos } = Astro.props;
+---
+
+<div class="gallery-grid columns-2 gap-3 sm:gap-4 md:columns-3 lg:columns-4">
+  {nuotraukos.map((n, i) => (
+    <button
+      type="button"
+      class="group relative mb-3 block w-full cursor-pointer break-inside-avoid overflow-hidden rounded-xl sm:mb-4"
+      data-lightbox-index={i}
+      aria-label={`Padidinti nuotrauką: ${n.alt}`}
+      data-reveal
+      style={`--d:${(i % 8) * 50}ms`}
+    >
+      <img
+        src={n.src}
+        alt={n.alt}
+        loading="lazy"
+        class="h-auto w-full transition-transform duration-500 group-hover:scale-105"
+      />
+      <span class="absolute inset-0 flex items-center justify-center bg-brand-950/0 transition-colors duration-300 group-hover:bg-brand-950/30" aria-hidden="true">
+        <svg class="h-8 w-8 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" /></svg>
+      </span>
+    </button>
+  ))}
+</div>
+
+<dialog id="lightbox" class="m-auto w-full max-w-5xl bg-transparent p-4 backdrop:bg-brand-950/90">
+  <div class="relative">
+    <img id="lightbox-img" src="" alt="" class="mx-auto max-h-[82vh] w-auto rounded-xl object-contain" />
+    <p id="lightbox-caption" class="mt-3 text-center text-sm text-white/80"></p>
+    <button id="lightbox-close" class="absolute -top-2 right-0 cursor-pointer rounded-full bg-white/15 p-2.5 text-white transition-colors duration-200 hover:bg-white/30" aria-label="Uždaryti">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+    </button>
+    <button id="lightbox-prev" class="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/15 p-3 text-white transition-colors duration-200 hover:bg-white/30" aria-label="Ankstesnė nuotrauka">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+    </button>
+    <button id="lightbox-next" class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/15 p-3 text-white transition-colors duration-200 hover:bg-white/30" aria-label="Kita nuotrauka">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+    </button>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  const caption = document.getElementById('lightbox-caption');
+  const thumbs = [...document.querySelectorAll<HTMLButtonElement>('[data-lightbox-index]')];
+  let current = 0;
+
+  function rodyti(i: number) {
+    if (!dialog || !img || !caption) return;
+    current = (i + thumbs.length) % thumbs.length;
+    const t = thumbs[current].querySelector('img')!;
+    img.src = t.src;
+    img.alt = t.alt;
+    caption.textContent = t.alt;
+    if (!dialog.open) dialog.showModal();
+  }
+
+  thumbs.forEach((b) => b.addEventListener('click', () => rodyti(Number(b.dataset.lightboxIndex))));
+  document.getElementById('lightbox-close')?.addEventListener('click', () => dialog?.close());
+  document.getElementById('lightbox-prev')?.addEventListener('click', () => rodyti(current - 1));
+  document.getElementById('lightbox-next')?.addEventListener('click', () => rodyti(current + 1));
+  dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  dialog?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') rodyti(current - 1);
+    if (e.key === 'ArrowRight') rodyti(current + 1);
+  });
+</script>

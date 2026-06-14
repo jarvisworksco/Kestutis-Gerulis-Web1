@@ -1,0 +1,107 @@
+---
+import { imone, paslaugos } from '../data/site.js';
+
+const nuorodos = [
+  { href: '/', tekstas: 'Pradžia' },
+  { href: '/paslaugos/' + paslaugos[0].slug, tekstas: 'Paslaugos', dropdown: true },
+  { href: '/galerija', tekstas: 'Galerija' },
+  { href: '/apie-mus', tekstas: 'Apie mus' },
+  { href: '/kontaktai', tekstas: 'Kontaktai' },
+];
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-brand-950/70 backdrop-blur-md"
+>
+  <div class="relative mx-auto flex max-w-7xl items-center justify-center gap-4 px-4 py-3 transition-all duration-300 sm:px-6 lg:justify-between" id="header-inner">
+    <a href="/" class="flex items-center" aria-label={`${imone.pavadinimas} — į pradžią`}>
+      <img id="header-logo" src="/logo.svg" alt={`${imone.pavadinimas} logotipas`} class="h-24 w-auto transition-all duration-300 sm:h-28 lg:h-32" />
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Pagrindinė navigacija">
+      {nuorodos.map((n) =>
+        n.dropdown ? (
+          <div class="group relative">
+            <a href={n.href} class="nav-link flex cursor-pointer items-center gap-1 text-sm font-medium text-white/85 transition-colors duration-200 hover:text-white">
+              {n.tekstas}
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+            </a>
+            <div class="invisible absolute left-0 top-full pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <ul class="w-64 rounded-xl border border-brand-100 bg-white p-2 shadow-xl">
+                {paslaugos.map((p) => (
+                  <li>
+                    <a href={`/paslaugos/${p.slug}`} class="block rounded-lg px-3 py-2.5 text-sm font-medium text-brand-900 transition-colors duration-200 hover:bg-brand-50">
+                      {p.pavadinimas}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <a href={n.href} class="nav-link text-sm font-medium text-white/85 transition-colors duration-200 hover:text-white">{n.tekstas}</a>
+        )
+      )}
+    </nav>
+
+    <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-3 sm:right-6 lg:static lg:translate-y-0">
+      <a href={imone.telefonasHref} class="header-phone hidden items-center gap-2 text-sm font-semibold text-white transition-colors duration-200 hover:text-accent lg:flex">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>
+        {imone.telefonas}
+      </a>
+      <a href="/kontaktai" class="header-cta hidden rounded-lg bg-accent px-4 py-2.5 text-sm font-bold text-brand-950 transition-colors duration-200 hover:bg-accent-dark lg:block">
+        Gauti nemokamą pasiūlymą
+      </a>
+      <button id="mobile-menu-btn" class="cursor-pointer rounded-lg p-2 text-white lg:hidden" aria-label="Atidaryti meniu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-white/10 bg-brand-950/95 backdrop-blur-md lg:hidden">
+    <nav class="mx-auto max-w-7xl space-y-1 px-4 py-4" aria-label="Mobili navigacija">
+      <a href="/" class="block rounded-lg px-3 py-2.5 font-medium text-white/90 hover:bg-white/10">Pradžia</a>
+      <p class="px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-white/50">Paslaugos</p>
+      {paslaugos.map((p) => (
+        <a href={`/paslaugos/${p.slug}`} class="block rounded-lg px-3 py-2.5 font-medium text-white/90 hover:bg-white/10">{p.pavadinimas}</a>
+      ))}
+      <a href="/galerija" class="block rounded-lg px-3 py-2.5 font-medium text-white/90 hover:bg-white/10">Galerija</a>
+      <a href="/apie-mus" class="block rounded-lg px-3 py-2.5 font-medium text-white/90 hover:bg-white/10">Apie mus</a>
+      <a href="/kontaktai" class="block rounded-lg px-3 py-2.5 font-medium text-white/90 hover:bg-white/10">Kontaktai</a>
+      <a href="/kontaktai" class="mt-2 block rounded-lg bg-accent px-3 py-3 text-center font-bold text-brand-950">Gauti nemokamą pasiūlymą</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const inner = document.getElementById('header-inner');
+  const logo = document.getElementById('header-logo');
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  // Lipnus header susitraukia skrolinant — logotipas ir paddingas sumažėja
+  const onScroll = () => {
+    const scrolled = window.scrollY > 40;
+    header?.classList.toggle('bg-brand-950/95', scrolled);
+    header?.classList.toggle('bg-brand-950/70', !scrolled);
+    header?.classList.toggle('shadow-lg', scrolled);
+    header?.classList.toggle('shrunk', scrolled);
+    inner?.classList.toggle('py-3', !scrolled);
+    inner?.classList.toggle('py-2', scrolled);
+    logo?.classList.toggle('h-24', !scrolled);
+    logo?.classList.toggle('sm:h-28', !scrolled);
+    logo?.classList.toggle('lg:h-32', !scrolled);
+    logo?.classList.toggle('h-16', scrolled);
+    logo?.classList.toggle('sm:h-20', scrolled);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  btn?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Uždaryti meniu' : 'Atidaryti meniu');
+  });
+</script>

@@ -1,0 +1,102 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { atsiliepimai, imone } from '../data/site.js';
+
+const menesiai = ['sausio', 'vasario', 'kovo', 'balandžio', 'gegužės', 'birželio',
+  'liepos', 'rugpjūčio', 'rugsėjo', 'spalio', 'lapkričio', 'gruodžio'];
+function formatuotiData(iso) {
+  const [m, men] = iso.split('-').map(Number);
+  return `${m} m. ${menesiai[men - 1]} mėn.`;
+}
+---
+
+<section class="bg-brand-950 py-20" id="atsiliepimai">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <SectionHeading eyebrow="Atsiliepimai" title="Ką sako mūsų klientai" light />
+    <p class="mt-4 text-center text-white/70" data-reveal>
+      Vidutinis įvertinimas <strong class="text-accent">{imone.ivertinimas.toFixed(1)} iš 5</strong>
+      {imone.atsiliepimuSkaicius > 0 && ` pagal ${imone.atsiliepimuSkaicius} klientų atsiliepimus`}
+    </p>
+
+    <div class="reviews-track mt-12 flex snap-x gap-6 overflow-x-auto pb-4" data-reveal>
+      {atsiliepimai.map((a) => (
+        <article class="w-[85%] shrink-0 rounded-2xl bg-white/[0.06] p-7 backdrop-blur-sm sm:w-[46%] lg:w-[31%]">
+          <div class="flex items-center gap-1" aria-label={`Įvertinimas: ${a.zvaigzdes} iš 5`}>
+            {Array.from({ length: a.zvaigzdes }).map(() => (
+              <svg class="h-4.5 w-4.5 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.401 8.168L12 19.318l-7.335 3.843 1.401-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
+            ))}
+          </div>
+          <p class="mt-4 leading-relaxed text-white/90">„{a.tekstas}"</p>
+          <footer class="mt-5 border-t border-white/10 pt-4">
+            <p class="font-semibold text-white">{a.vardas}</p>
+            <p class="mt-0.5 text-sm text-white/60">
+              {a.paslauga ? `${a.paslauga} · ` : ''}{formatuotiData(a.data)}
+            </p>
+          </footer>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-6 flex items-center justify-center gap-3" data-reveal>
+      <button class="reviews-prev cursor-pointer rounded-full border border-white/20 p-2.5 text-white transition-colors duration-200 hover:bg-white/10" aria-label="Ankstesni atsiliepimai">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+      </button>
+      <button class="reviews-next cursor-pointer rounded-full border border-white/20 p-2.5 text-white transition-colors duration-200 hover:bg-white/10" aria-label="Kiti atsiliepimai">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+      </button>
+    </div>
+
+    <div class="mt-8 text-center" data-reveal>
+      <a href={imone.profilis} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg border-2 border-white/25 px-7 py-3.5 font-bold text-white transition-colors duration-200 hover:bg-white/10">
+        Žiūrėti visus atsiliepimus
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+      </a>
+    </div>
+
+    <!-- ĮVERTINKITE MUS — žvaigždutės veda į kliento atsiliepimų puslapį (imone.profilis) -->
+    <div class="mx-auto mt-12 max-w-xl rounded-2xl bg-white p-8 text-center shadow-xl" data-reveal>
+      <p class="display text-lg font-semibold text-brand-950">
+        Naudojotės {imone.pavadinimas} paslaugomis? Įvertinkite mus:
+      </p>
+      <div class="star-rate mt-5 flex flex-row-reverse justify-center gap-1.5">
+        {[5, 4, 3, 2, 1].map((n) => (
+          <a href={imone.profilis} target="_blank" rel="noopener" aria-label={`Įvertinti ${n} žvaigždutėmis`} class="cursor-pointer p-0.5 transition-transform duration-150 hover:scale-110">
+            <svg class="h-9 w-9" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.401 8.168L12 19.318l-7.335 3.843 1.401-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
+          </a>
+        ))}
+      </div>
+      <p class="mt-4 text-sm text-brand-900/60">Pasirinkite žvaigždučių skaičių — nukreipsime į atsiliepimo formą.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Žvaigždučių „užsipildymas" iki užvestos (flex-row-reverse + ~ trikas) */
+  .star-rate a { color: #d8dee0; }
+  .star-rate a:hover,
+  .star-rate a:hover ~ a { color: var(--color-accent); }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('.reviews-track');
+  if (track) {
+    const step = () => (track.firstElementChild as HTMLElement)?.offsetWidth + 24 || 320;
+    document.querySelector('.reviews-prev')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    document.querySelector('.reviews-next')?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+
+    // Auto-slide su pauze užvedus pelę
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      let paused = false;
+      track.addEventListener('mouseenter', () => (paused = true));
+      track.addEventListener('mouseleave', () => (paused = false));
+      track.addEventListener('touchstart', () => (paused = true), { passive: true });
+      setInterval(() => {
+        if (paused || !track.isConnected) return;
+        const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 10;
+        if (atEnd) track.scrollTo({ left: 0, behavior: 'smooth' });
+        else track.scrollBy({ left: step(), behavior: 'smooth' });
+      }, 5000);
+    }
+  }
+</script>

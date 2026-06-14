@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/* =============================================================================
+   DIZAINO SISTEMA — ČIA keičiama VISA svetainės paletė ir šriftai.
+   Kiekvienam klientui parink KITĄ paletę (žr. TEMPLATE-PROMPT.md 4 sk.), kad
+   svetainės nesikartotų. Visi komponentai naudoja brand-* / accent / cream —
+   pakeitus reikšmes žemiau, persidažo visa svetainė. Komponentų liesti nereikia.
+
+   brand-*  = pagrindinė (tamsi, sodri) spalva — header, footer, antraštės, CTA fonai
+   accent   = ryškus veiksmo akcentas (mygtukai „Gauti pasiūlymą", žvaigždutės)
+   cream    = šviesus puslapio fonas
+
+   PALETŽIŲ PAVYZDŽIAI (nukopijuok vieną rinkinį į brand-50..950 + accent):
+   • Žalia/gamta:     950 #0e1e13 … 600 #34663c … 100 #e0ecdf   accent #f5a623
+   • Mėlyna/patikima: 950 #0b1b2b … 600 #1d4e74 … 100 #dce8f2   accent #f59e0b
+   • Antracitas/tech: 950 #0c0e12 … 600 #374151 … 100 #e5e7eb   accent #22c55e
+   • Terakota/jauku:  950 #2a140d … 600 #9a3f1f … 100 #f3e3da   accent #0ea5a0
+   ŠRIFTŲ POROS (visos su latin-ext — atnaujink ir <link> Base.astro faile):
+   Oswald+Inter · Anton+Inter · Archivo+Source Sans 3 · Bebas Neue+Manrope
+============================================================================= */
+@theme {
+  --color-brand-50: #f2f7f2;
+  --color-brand-100: #e0ecdf;
+  --color-brand-200: #c2d9c2;
+  --color-brand-300: #97bd99;
+  --color-brand-400: #689c6d;
+  --color-brand-500: #47804e;
+  --color-brand-600: #34663c;
+  --color-brand-700: #2a5131;
+  --color-brand-800: #224128;
+  --color-brand-900: #1b3522;
+  --color-brand-950: #0e1e13;
+
+  --color-accent: #f5a623;
+  --color-accent-dark: #d98c0a;
+
+  --color-cream: #f7f5ef;
+
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-sans: "Inter", "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #1f2a22;
+  background-color: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Antraštės: condensed caps. Diakritikams (Į Š Ž Ų Ū) reikia oro virš raidžių —
+   line-height ne mažesnis nei 1.15, jokio overflow karpymo. */
+.display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 1.18;
+  overflow: visible;
+}
+
+/* Header elementai dideli viršuje, susitraukia skrolinant (kaip logotipas) */
+#site-header .nav-link,
+#site-header .header-phone {
+  font-size: 1.125rem;
+  transition: font-size 0.3s ease;
+}
+#site-header.shrunk .nav-link,
+#site-header.shrunk .header-phone {
+  font-size: 0.875rem;
+}
+#site-header .header-cta {
+  font-size: 1.0625rem;
+  padding: 0.85rem 1.6rem;
+  transition: font-size 0.3s ease, padding 0.3s ease;
+}
+#site-header.shrunk .header-cta {
+  font-size: 0.875rem;
+  padding: 0.625rem 1rem;
+}
+
+/* Scroll-reveal animacijos */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero Ken Burns */
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.kenburns {
+  animation: kenburns 18s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .kenburns { animation: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* DUK akordeonas */
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq .faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+details.faq.expanded .faq-body { grid-template-rows: 1fr; }
+details.faq .faq-body > div { overflow: hidden; }
+details.faq summary svg { transition: transform 0.3s ease; }
+details.faq.expanded summary svg { transform: rotate(45deg); }
+
+/* Atsiliepimų karuselė */
+.reviews-track {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.reviews-track::-webkit-scrollbar { display: none; }
+.reviews-track > * { scroll-snap-align: start; }

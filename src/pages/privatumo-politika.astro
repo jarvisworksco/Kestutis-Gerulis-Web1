@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { imone } from '../data/site.js';
+---
+
+<Base
+  title={`Privatumo politika — ${imone.pavadinimas}`}
+  description={`${imone.pavadinimas} svetainės privatumo politika: kokius asmens duomenis renkame, kaip juos naudojame ir saugome pagal BDAR reikalavimus.`}
+>
+  <section class="bg-brand-950 pb-12 pt-44">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6">
+      <h1 class="display text-4xl font-bold text-white">Privatumo politika</h1>
+    </div>
+  </section>
+
+  <section class="py-14">
+    <article class="prose-pine mx-auto max-w-3xl space-y-8 px-4 leading-relaxed text-brand-900/85 sm:px-6">
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">1. Bendrosios nuostatos</h2>
+        <p class="mt-3">
+          Ši privatumo politika nustato, kaip {imone.pavadinimas} (toliau — „mes") tvarko asmens duomenis, gautus per šią interneto svetainę. Duomenys tvarkomi vadovaujantis Bendruoju duomenų apsaugos reglamentu (ES) 2016/679 (BDAR) ir Lietuvos Respublikos asmens duomenų teisinės apsaugos įstatymu.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">2. Kokius duomenis renkame</h2>
+        <p class="mt-3">
+          Pateikdami užklausą per svetainės formą, mums nurodote: vardą, telefono numerį ir žinutės turinį. Šiuos duomenis pateikiate savanoriškai, kad galėtume atsakyti į jūsų užklausą ir pateikti paslaugų pasiūlymą.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">3. Duomenų naudojimo tikslas</h2>
+        <p class="mt-3">
+          Jūsų pateikti duomenys naudojami tik: atsakyti į jūsų užklausą, suderinti paslaugų teikimo sąlygas ir kainą, susisiekti dėl darbų atlikimo. Duomenų neperduodame tretiesiems asmenims rinkodaros tikslais ir nenaudojame jokiais kitais tikslais be jūsų sutikimo.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">4. Duomenų saugojimo terminas</h2>
+        <p class="mt-3">
+          Užklausų duomenis saugome ne ilgiau, nei būtina užklausai apdoroti ir paslaugoms suteikti, bet ne ilgiau kaip 2 metus nuo paskutinio kontakto, nebent teisės aktai numato kitaip (pvz., buhalterinės apskaitos dokumentams).
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">5. Jūsų teisės</h2>
+        <p class="mt-3">
+          Turite teisę: susipažinti su savo asmens duomenimis, reikalauti juos ištaisyti ar ištrinti, apriboti jų tvarkymą, nesutikti su tvarkymu, taip pat pateikti skundą Valstybinei duomenų apsaugos inspekcijai (vdai.lrv.lt). Dėl savo teisių įgyvendinimo kreipkitės telefonu {imone.telefonas}.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">6. Slapukai</h2>
+        <p class="mt-3">
+          Svetainė nenaudoja stebėjimo ar rinkodaros slapukų. Gali būti naudojami tik techniškai būtini slapukai, užtikrinantys svetainės veikimą. Žemėlapio funkcijai naudojama „OpenStreetMap" paslauga, kuriai galioja jos pačios privatumo sąlygos.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">7. Kontaktai</h2>
+        <p class="mt-3">
+          Visais privatumo klausimais galite kreiptis: {imone.pavadinimas}, tel. <a href={imone.telefonasHref} class="font-semibold underline">{imone.telefonas}</a>, {imone.miestas}.
+        </p>
+      </div>
+    </article>
+  </section>
+</Base>

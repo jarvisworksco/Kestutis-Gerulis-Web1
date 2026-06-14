@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { imone, vietoves } from '../data/site.js';
+---
+
+<Base
+  title={`Kontaktai — ${imone.pavadinimas} | ${imone.miestas}`}
+  description={`Susisiekite su ${imone.pavadinimas}: ${imone.telefonas}. ${imone.miestas} ir ${imone.aptarnavimoSpindulys}. Nemokamas pasiūlymas.`}
+>
+  <section class="bg-brand-950 pb-16 pt-44">
+    <div class="mx-auto max-w-7xl px-4 text-center sm:px-6" data-reveal>
+      <span class="inline-block rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">Kontaktai</span>
+      <h1 class="display mt-4 text-4xl font-bold text-white sm:text-5xl">Susisiekime</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/75">
+        Paskambinkite arba palikite užklausą — įvertinsiu darbą ir pateiksiu kainą be įsipareigojimų.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.2fr]">
+      <div data-reveal>
+        <h2 class="display text-2xl font-semibold text-brand-950">Kontaktinė informacija</h2>
+        <ul class="mt-7 space-y-5">
+          <li>
+            <a href={imone.telefonasHref} class="flex items-center gap-4 rounded-xl border border-brand-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>
+              </span>
+              <span>
+                <span class="block text-sm text-brand-900/60">Telefonas (skambučiai peradresuojami paslaugų teikėjui)</span>
+                <span class="block text-lg font-bold text-brand-950">{imone.telefonas}</span>
+              </span>
+            </a>
+          </li>
+          <li class="flex items-center gap-4 rounded-xl border border-brand-100 bg-white p-5 shadow-sm">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+            </span>
+            <span>
+              <span class="block text-sm text-brand-900/60">Veiklos teritorija</span>
+              <span class="block text-lg font-bold text-brand-950">{imone.miestas}, {imone.aptarnavimoSpindulys}</span>
+            </span>
+          </li>
+          <li class="flex items-center gap-4 rounded-xl border border-brand-100 bg-white p-5 shadow-sm">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.401 8.168L12 19.318l-7.335 3.843 1.401-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
+            </span>
+            <span>
+              <span class="block text-sm text-brand-900/60">Klientų įvertinimas</span>
+              <a href={imone.profilis} target="_blank" rel="noopener" class="block text-lg font-bold text-brand-950 underline-offset-2 hover:underline">{imone.ivertinimas.toFixed(1)} iš 5 ({imone.atsiliepimuSkaicius} atsiliepimai)</a>
+            </span>
+          </li>
+        </ul>
+
+        <h3 class="display mt-10 text-lg font-semibold text-brand-950">Aptarnaujamos vietovės</h3>
+        <p class="mt-3 leading-relaxed text-brand-900/75">{vietoves.join(', ')}.</p>
+
+        <div class="mt-8 overflow-hidden rounded-2xl shadow-md">
+          {/* PAKEISTI bbox/marker pagal kliento miestą (openstreetmap.org → Export). */}
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=21.0%2C54.5%2C26.5%2C56.5&layer=mapnik&marker=55.0%2C23.8"
+            class="h-72 w-full border-0"
+            title={`${imone.pavadinimas} veiklos teritorija — ${imone.miestas}`}
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+
+      <div data-reveal style="--d:120ms">
+        <div class="rounded-2xl border border-brand-100 bg-white p-8 shadow-md">
+          <h2 class="display text-2xl font-semibold text-brand-950">Užklausos forma</h2>
+          <p class="mb-6 mt-2 text-brand-900/70">Aprašykite darbą — susisieksime ir pateiksime kainą. Dažniausiai atsakome tą pačią dieną.</p>
+          <InquiryForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,133 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import InquiryForm from '../../components/InquiryForm.astro';
+import ProcessSteps from '../../components/ProcessSteps.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import GalleryGrid from '../../components/GalleryGrid.astro';
+import { paslaugos, atsiliepimai, imone } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return paslaugos.map((p) => ({ params: { slug: p.slug }, props: { paslauga: p } }));
+}
+
+const { paslauga } = Astro.props;
+
+// Pirmiausia rodomi atsiliepimai apie šią paslaugą, tada bendri
+const susije = atsiliepimai.filter((a) => a.paslauga === paslauga.pavadinimas);
+const rodomi = (susije.length ? susije : atsiliepimai).slice(0, 3);
+
+const kitos = paslaugos.filter((p) => p.slug !== paslauga.slug);
+---
+
+<Base
+  title={`${paslauga.pavadinimas} ${imone.miestas} mieste — ${imone.pavadinimas} | ${paslauga.kaina}`}
+  description={`${paslauga.pavadinimas} ${imone.miestas} mieste ir ${imone.aptarnavimoSpindulys}. ${paslauga.kaina}. ${paslauga.trumpai} Skambinkite ${imone.telefonas}.`}
+  ogImage={paslauga.kortelesNuotrauka}
+>
+  <!-- PASLAUGOS HERO -->
+  <section class="relative overflow-hidden bg-brand-950">
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src={paslauga.kortelesNuotrauka} alt="" class="h-full w-full object-cover opacity-35" />
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/70 to-brand-950/40"></div>
+    </div>
+    <div class="relative mx-auto max-w-7xl px-4 pb-20 pt-44 sm:px-6">
+      <nav class="text-sm text-white/60" aria-label="Naršymo kelias" data-reveal>
+        <a href="/" class="transition-colors duration-200 hover:text-white">Pradžia</a>
+        <span class="mx-2" aria-hidden="true">/</span>
+        <span class="text-white/85">{paslauga.pavadinimas}</span>
+      </nav>
+      <h1 class="display mt-5 max-w-3xl text-4xl font-bold text-white sm:text-5xl" data-reveal style="--d:80ms">
+        {paslauga.pavadinimas}
+      </h1>
+      <p class="mt-4 inline-block rounded-full bg-accent px-5 py-2 font-bold text-brand-950" data-reveal style="--d:160ms">
+        {paslauga.kaina}
+      </p>
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row" data-reveal style="--d:240ms">
+        <a href="/kontaktai" class="rounded-lg bg-accent px-7 py-3.5 text-center font-bold text-brand-950 transition-colors duration-200 hover:bg-accent-dark">
+          Gauti nemokamą pasiūlymą
+        </a>
+        <a href={imone.telefonasHref} class="rounded-lg border-2 border-white/30 px-7 py-3.5 text-center font-bold text-white transition-colors duration-200 hover:bg-white/10">
+          {imone.telefonas}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- APRAŠYMAS + FORMA -->
+  <section class="py-20">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.5fr_1fr]">
+      <article data-reveal>
+        <SectionHeading eyebrow="Apie paslaugą" title={`Kaip atliekame: ${paslauga.pavadinimas.toLowerCase()}`} center={false} />
+        <div class="mt-7 space-y-5">
+          {paslauga.aprasymas.map((pastraipa) => (
+            <p class="leading-relaxed text-brand-900/80">{pastraipa}</p>
+          ))}
+        </div>
+        <div class="mt-8 rounded-xl border-l-4 border-accent bg-brand-50 p-6">
+          <p class="font-semibold text-brand-950">Galutinė kaina priklauso nuo darbo apimties ir sudėtingumo — pateiksiu kainą pagal jūsų užklausą.</p>
+        </div>
+      </article>
+      <aside data-reveal style="--d:150ms">
+        <div class="sticky top-28 rounded-2xl border border-brand-100 bg-white p-7 shadow-md">
+          <h2 class="display text-xl font-semibold text-brand-950">Gaukite kainą šiai paslaugai</h2>
+          <p class="mb-5 mt-1.5 text-sm text-brand-900/70">Atsakome greitai — dažniausiai tą pačią dieną.</p>
+          <InquiryForm compact />
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PASLAUGOS NUOTRAUKOS -->
+  <section class="bg-brand-50 py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <SectionHeading eyebrow="Darbų pavyzdžiai" title={`${paslauga.pavadinimas} — mūsų atlikti darbai`} />
+      <div class="mt-12">
+        <GalleryGrid nuotraukos={paslauga.nuotraukos} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ATSILIEPIMAI -->
+  <section class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <SectionHeading eyebrow="Atsiliepimai" title="Klientų patirtys" />
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {rodomi.map((a, i) => (
+          <article class="rounded-2xl border border-brand-100 bg-white p-7 shadow-sm" data-reveal style={`--d:${i * 90}ms`}>
+            <div class="flex items-center gap-1" aria-label={`Įvertinimas: ${a.zvaigzdes} iš 5`}>
+              {Array.from({ length: a.zvaigzdes }).map(() => (
+                <svg class="h-4 w-4 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.783 1.401 8.168L12 19.318l-7.335 3.843 1.401-8.168L.132 9.21l8.2-1.192L12 .587z"/></svg>
+              ))}
+            </div>
+            <p class="mt-4 leading-relaxed text-brand-900/85">„{a.tekstas}"</p>
+            <p class="mt-4 font-semibold text-brand-950">{a.vardas}</p>
+            {a.paslauga && <p class="text-sm text-brand-900/60">{a.paslauga}</p>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ProcessSteps />
+
+  <!-- KITOS PASLAUGOS -->
+  <section class="py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <SectionHeading eyebrow="Kitos paslaugos" title="Taip pat galime padėti" />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {kitos.map((p, i) => (
+          <a href={`/paslaugos/${p.slug}`} class="group overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg" data-reveal style={`--d:${i * 80}ms`}>
+            <img src={p.kortelesNuotrauka} alt={p.alt} loading="lazy" class="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div class="p-5">
+              <h3 class="display text-base font-semibold text-brand-950">{p.pavadinimas}</h3>
+              <p class="mt-1 text-xs font-bold uppercase tracking-wider text-accent-dark">{p.kaina}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection antraste={`Reikia paslaugos „${paslauga.pavadinimas}“?`} />
+</Base>

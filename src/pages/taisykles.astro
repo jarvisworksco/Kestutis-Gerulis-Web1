@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import { imone } from '../data/site.js';
+---
+
+<Base
+  title={`Naudojimosi taisyklės — ${imone.pavadinimas}`}
+  description={`${imone.pavadinimas} interneto svetainės naudojimosi taisyklės: paslaugų užsakymo tvarka, kainodara, atsakomybė ir intelektinė nuosavybė.`}
+>
+  <section class="bg-brand-950 pb-12 pt-44">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6">
+      <h1 class="display text-4xl font-bold text-white">Naudojimosi taisyklės</h1>
+    </div>
+  </section>
+
+  <section class="py-14">
+    <article class="mx-auto max-w-3xl space-y-8 px-4 leading-relaxed text-brand-900/85 sm:px-6">
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">1. Bendroji informacija</h2>
+        <p class="mt-3">
+          Ši svetainė priklauso {imone.pavadinimas}, teikiančiai paslaugas {imone.miestas} mieste ir {imone.aptarnavimoSpindulys}. Naudodamiesi svetaine sutinkate su šiomis taisyklėmis.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">2. Paslaugų užsakymas</h2>
+        <p class="mt-3">
+          Svetainėje pateikta užklausos forma ir telefono numeris skirti susisiekti dėl paslaugų. Užklausos pateikimas nesukuria įsipareigojimo užsakyti paslaugas — galutinės sąlygos (darbų apimtis, kaina, terminai) suderinamos atskiru susitarimu telefonu ar raštu.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">3. Kainos</h2>
+        <p class="mt-3">
+          Svetainėje nurodytos kainos yra orientacinės pradinės kainos („nuo"). Galutinė kaina priklauso nuo darbų apimties, sudėtingumo ir atstumo iki objekto. Tiksli kaina pateikiama įvertinus konkretų objektą. Už suteiktas paslaugas išrašomos sąskaitos faktūros.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">4. Intelektinė nuosavybė</h2>
+        <p class="mt-3">
+          Svetainės turinys — tekstai ir atliktų darbų nuotraukos — priklauso {imone.pavadinimas}. Kopijuoti, platinti ar kitaip naudoti turinį be raštiško sutikimo draudžiama.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">5. Atsakomybės ribojimas</h2>
+        <p class="mt-3">
+          Stengiamės, kad svetainėje pateikta informacija būtų tiksli ir aktuali, tačiau ji yra bendro informacinio pobūdžio. Dėl konkrečių paslaugų sąlygų visada teiraukitės tiesiogiai telefonu {imone.telefonas}.
+        </p>
+      </div>
+      <div>
+        <h2 class="display text-xl font-semibold text-brand-950">6. Baigiamosios nuostatos</h2>
+        <p class="mt-3">
+          Taisyklės gali būti atnaujinamos be atskiro įspėjimo. Šioms taisyklėms taikoma Lietuvos Respublikos teisė. Asmens duomenų tvarkymą reglamentuoja <a href="/privatumo-politika" class="font-semibold underline">privatumo politika</a>.
+        </p>
+      </div>
+    </article>
+  </section>
+</Base>

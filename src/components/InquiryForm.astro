@@ -1,0 +1,101 @@
+---
+import { imone } from '../data/site.js';
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<!--
+  Užklausos forma. Siuntimui naudojamas Web3Forms — įrašykite tikrą raktą žemiau
+  (WEB3FORMS_KEY). Kol rakto nėra, forma parodo prašymą paskambinti telefonu.
+-->
+<form class="inquiry-form space-y-4" novalidate data-phone={imone.telefonas} data-brand={imone.pavadinimas}>
+  <div class={compact ? 'space-y-4' : 'grid gap-4 sm:grid-cols-2'}>
+    <div>
+      <label for={`vardas-${compact}`} class="mb-1.5 block text-sm font-semibold">Vardas <span class="text-red-600" aria-hidden="true">*</span></label>
+      <input
+        type="text" id={`vardas-${compact}`} name="vardas" required autocomplete="name"
+        placeholder="Jūsų vardas"
+        class="w-full rounded-lg border border-brand-200 bg-white px-4 py-3 text-base outline-none transition-colors duration-200 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
+      />
+    </div>
+    <div>
+      <label for={`telefonas-${compact}`} class="mb-1.5 block text-sm font-semibold">Telefonas <span class="text-red-600" aria-hidden="true">*</span></label>
+      <input
+        type="tel" id={`telefonas-${compact}`} name="telefonas" required autocomplete="tel"
+        placeholder="+370 6XX XXXXX"
+        class="w-full rounded-lg border border-brand-200 bg-white px-4 py-3 text-base outline-none transition-colors duration-200 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
+      />
+    </div>
+  </div>
+  <div>
+    <label for={`zinute-${compact}`} class="mb-1.5 block text-sm font-semibold">Žinutė</label>
+    <textarea
+      id={`zinute-${compact}`} name="zinute" rows={compact ? 3 : 4}
+      placeholder="Trumpai aprašykite darbą: kokia paslauga, apimtis, vietovė…"
+      class="w-full rounded-lg border border-brand-200 bg-white px-4 py-3 text-base outline-none transition-colors duration-200 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
+    ></textarea>
+  </div>
+  <div class="flex items-start gap-2.5">
+    <input type="checkbox" id={`sutikimas-${compact}`} name="sutikimas" required class="mt-1 h-4 w-4 cursor-pointer accent-brand-700" />
+    <label for={`sutikimas-${compact}`} class="text-sm text-brand-900/70">
+      Sutinku, kad mano duomenys būtų naudojami užklausai apdoroti pagal
+      <a href="/privatumo-politika" class="underline transition-colors duration-200 hover:text-brand-700">privatumo politiką</a>. <span class="text-red-600" aria-hidden="true">*</span>
+    </label>
+  </div>
+  <button
+    type="submit"
+    class="w-full cursor-pointer rounded-lg bg-accent px-6 py-3.5 text-base font-bold text-brand-950 transition-colors duration-200 hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    Siųsti užklausą
+  </button>
+  <p class="form-status hidden rounded-lg px-4 py-3 text-sm font-medium" role="status" aria-live="polite"></p>
+  <p class="text-center text-sm text-brand-900/60">
+    Arba skambinkite tiesiogiai: <a href={imone.telefonasHref} class="font-bold text-brand-800 underline">{imone.telefonas}</a>
+  </p>
+</form>
+
+<script>
+  // TODO: įrašykite Web3Forms prieigos raktą (https://web3forms.com), kad forma siųstų laiškus
+  const WEB3FORMS_KEY = '';
+
+  document.querySelectorAll<HTMLFormElement>('.inquiry-form').forEach((form) => {
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const status = form.querySelector<HTMLElement>('.form-status')!;
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      const show = (msg: string, ok: boolean) => {
+        status.textContent = msg;
+        status.classList.remove('hidden', 'bg-green-100', 'text-green-900', 'bg-amber-100', 'text-amber-900');
+        status.classList.add(ok ? 'bg-green-100' : 'bg-amber-100', ok ? 'text-green-900' : 'text-amber-900');
+      };
+
+      if (!form.reportValidity()) return;
+
+      const phone = form.dataset.phone || '';
+      if (!WEB3FORMS_KEY) {
+        show(`Forma dar neaktyvuota — paskambinkite mums telefonu ${phone} ir aptarsime darbus iš karto.`, false);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Siunčiama…';
+      try {
+        const data = new FormData(form);
+        data.append('access_key', WEB3FORMS_KEY);
+        data.append('subject', `Nauja užklausa iš ${form.dataset.brand || ''} svetainės`);
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+        if (!res.ok) throw new Error(String(res.status));
+        show('Ačiū! Jūsų užklausa gauta — susisieksime artimiausiu metu.', true);
+        form.reset();
+      } catch {
+        show('Nepavyko išsiųsti užklausos. Paskambinkite telefonu +370 618 93842.', false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Siųsti užklausą';
+      }
+    });
+  });
+</script>

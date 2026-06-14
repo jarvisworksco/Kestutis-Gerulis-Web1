@@ -1,0 +1,10 @@
+<!-- PLACEHOLDER nuotrauka (vertikali). Pakeisti realiomis kliento nuotraukomis per photo-grab. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200">
+  <rect width="900" height="1200" fill="#dfe3df"/>
+  <path d="M0 880 L260 660 L470 800 L660 600 L900 860 L900 1200 L0 1200 Z" fill="#c4ccc4"/>
+  <circle cx="680" cy="300" r="80" fill="#cfd5cf"/>
+  <g fill="#9aa39b" font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="450" y="560" font-size="56" font-weight="bold">NUOTRAUKA</text>
+    <text x="450" y="616" font-size="30">900 × 1200</text>
+  </g>
+</svg>

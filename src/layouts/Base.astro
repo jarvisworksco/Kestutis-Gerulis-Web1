@@ -1,0 +1,125 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Chatbot from '../components/Chatbot.astro';
+import { imone, vietoves, atsiliepimai, paslaugos, turinys } from '../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage = turinys.hero.nuotrauka } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: imone.pavadinimas,
+  description: `${paslaugos.map((p) => p.pavadinimas).join(', ')} ${imone.miestas} mieste ir ${imone.aptarnavimoSpindulys}.`,
+  telephone: imone.telefonasHref.replace('tel:', ''),
+  url: Astro.site?.toString(),
+  image: new URL(ogImage, Astro.site).toString(),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: imone.miestas,
+    addressCountry: 'LT',
+  },
+  areaServed: vietoves.slice(0, -1).map((v) => ({ '@type': 'City', name: v })),
+  priceRange: '€€',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: imone.ivertinimas,
+    reviewCount: imone.atsiliepimuSkaicius,
+    bestRating: 5,
+  },
+  review: atsiliepimai.slice(0, 3).map((a) => ({
+    '@type': 'Review',
+    author: { '@type': 'Person', name: a.vardas },
+    datePublished: a.data,
+    reviewBody: a.tekstas,
+    reviewRating: { '@type': 'Rating', ratingValue: a.zvaigzdes, bestRating: 5 },
+  })),
+};
+---
+
+<!doctype html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:locale" content="lt_LT" />
+
+    <!-- Oswald + Inter: abu turi pilną latin-ext (ą č ę ė į š ų ū ž) palaikymą -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap&subset=latin-ext"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <Chatbot />
+
+    <script>
+      // Scroll-reveal per IntersectionObserver
+      const els = document.querySelectorAll('[data-reveal]');
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('revealed');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+      els.forEach((el) => io.observe(el));
+
+      // Count-up skaičiams
+      const nums = document.querySelectorAll('[data-countup]');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const ioNum = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          ioNum.unobserve(e.target);
+          const el = e.target as HTMLElement;
+          const target = parseFloat(el.dataset.countup || '0');
+          const decimals = (el.dataset.countup || '').includes('.') ? 1 : 0;
+          if (reduced) { el.textContent = target.toFixed(decimals); continue; }
+          const start = performance.now();
+          const dur = 1400;
+          const tick = (t: number) => {
+            const p = Math.min((t - start) / dur, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = (target * eased).toFixed(decimals);
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      }, { threshold: 0.5 });
+      nums.forEach((el) => ioNum.observe(el));
+    </script>
+  </body>
+</html>
